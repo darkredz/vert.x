@@ -64,7 +64,15 @@ public class DefaultSockJSServer implements SockJSServer {
         }
       }
     });
-    httpServer.requestHandler(rm);
+    httpServer.requestHandler(new Handler<HttpServerRequest>() {
+      @Override
+      public void handle(HttpServerRequest req) {
+        if (log.isTraceEnabled()) {
+          log.trace("Got request in sockjs server: " + req.uri);
+        }
+        rm.handle(req);
+      }
+    });
     httpServer.websocketHandler(wsMatcher);
   }
 
